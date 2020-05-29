@@ -168,6 +168,11 @@ public class MainView extends javax.swing.JFrame {
         });
 
         btn_delete.setText("Delete");
+        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deleteActionPerformed(evt);
+            }
+        });
 
         btn_reset.setText("Reset");
         btn_reset.addActionListener(new java.awt.event.ActionListener() {
@@ -313,6 +318,23 @@ public class MainView extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btn_updateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        // TODO add your handling code here:
+        try{
+            int answer;
+            if((answer = JOptionPane.showConfirmDialog(null, "Ingin menghapus data?", "konfirmasi", JOptionPane.YES_NO_OPTION)) == 0){
+                statement = connection.createStatement();
+                statement.executeUpdate("DELETE FROM data_penduduk WHERE id='"
+                        +tb_penduduk.getValueAt(tb_penduduk.getSelectedRow(), 0)+
+                        "'");
+                fillData("");
+                clearForm();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btn_deleteActionPerformed
 
     /**
      * @param args the command line arguments
