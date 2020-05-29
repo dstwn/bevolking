@@ -37,6 +37,16 @@ public class MainView extends javax.swing.JFrame {
         tb_penduduk.setModel(tableModel);
     }
     
+    public void clearForm() {
+        et_nik.setText("");
+        et_name.setText("");
+        cb_district.setSelectedIndex(0);
+        cb_gender.setSelectedIndex(0);
+        cb_year.setSelectedIndex(0);
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
+        btn_add.setEnabled(true);
+    }
     public void fillData(String where) {
         try{
             statement = connection.createStatement();
@@ -64,6 +74,8 @@ public class MainView extends javax.swing.JFrame {
         initComponents();
         heading();
         fillData("");
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
     }
 
     /**
@@ -90,6 +102,9 @@ public class MainView extends javax.swing.JFrame {
         tb_penduduk = new javax.swing.JTable();
         et_nik = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        btn_update = new javax.swing.JButton();
+        btn_delete = new javax.swing.JButton();
+        btn_reset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,7 +133,7 @@ public class MainView extends javax.swing.JFrame {
 
         cb_year.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Pilih --", "2018", "2019", "2020" }));
 
-        btn_add.setText("Tambah");
+        btn_add.setText("Create");
         btn_add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_addActionPerformed(evt);
@@ -136,9 +151,30 @@ public class MainView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tb_penduduk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tb_pendudukMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tb_penduduk);
 
         jLabel7.setText("NIK");
+
+        btn_update.setText("Update");
+        btn_update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_updateActionPerformed(evt);
+            }
+        });
+
+        btn_delete.setText("Delete");
+
+        btn_reset.setText("Reset");
+        btn_reset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_resetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,26 +183,31 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(121, 121, 121)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel1)
                         .addComponent(jLabel2)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addGap(94, 94, 94)
-                            .addComponent(et_name, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4)
                                 .addComponent(jLabel5)
                                 .addComponent(jLabel6)
-                                .addComponent(jLabel7))
+                                .addComponent(jLabel7)
+                                .addComponent(jLabel3))
                             .addGap(46, 46, 46)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(et_name)
                                 .addComponent(et_nik, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(cb_gender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cb_district, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cb_district, 0, 260, Short.MAX_VALUE)
                                 .addComponent(cb_year, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addComponent(btn_add))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btn_update, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_reset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btn_delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(44, Short.MAX_VALUE))
@@ -201,7 +242,13 @@ public class MainView extends javax.swing.JFrame {
                             .addComponent(et_nik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
                         .addGap(5, 5, 5)
-                        .addComponent(btn_add))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_add)
+                            .addComponent(btn_update))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_delete)
+                            .addComponent(btn_reset)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(176, Short.MAX_VALUE))
         );
@@ -222,11 +269,50 @@ public class MainView extends javax.swing.JFrame {
                statement.executeUpdate("INSERT INTO data_penduduk VALUES('"+et_nik.getText()+"','"+et_name.getText()+"','"+cb_district.getSelectedItem()+"','"+cb_gender.getSelectedItem()+"','"+cb_year.getSelectedItem()+"')");
                JOptionPane.showMessageDialog(rootPane, "Berhasil disimpan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                fillData("");
+               clearForm();
            }catch(Exception e){
                e.printStackTrace();
            }
        }
     }//GEN-LAST:event_btn_addActionPerformed
+
+    private void tb_pendudukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_pendudukMouseClicked
+        et_nik.setText(tb_penduduk.getValueAt(tb_penduduk.getSelectedRow(), 0).toString());
+        et_name.setText(tb_penduduk.getValueAt(tb_penduduk.getSelectedRow(), 1).toString());
+        cb_gender.setSelectedItem(tb_penduduk.getValueAt(tb_penduduk.getSelectedRow(), 2).toString());
+        cb_district.setSelectedItem(tb_penduduk.getValueAt(tb_penduduk.getSelectedRow(), 3).toString());
+        cb_year.setSelectedItem(tb_penduduk.getValueAt(tb_penduduk.getSelectedRow(), 4).toString());
+        btn_update.setEnabled(true);
+        btn_delete.setEnabled(true);
+        btn_add.setEnabled(false);
+        et_nik.setEditable(false);
+    }//GEN-LAST:event_tb_pendudukMouseClicked
+
+    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
+        // TODO add your handling code here:
+        clearForm();
+    }//GEN-LAST:event_btn_resetActionPerformed
+
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        // TODO add your handling code here:
+        try{
+            statement = connection.createStatement();
+            statement.executeUpdate("UPDATE data_penduduk set "
+//                    +"id='"     + et_nik.getText() +"',"
+                    +"name='"     + et_name.getText() +"',"
+                    +"gender='"     + cb_gender.getSelectedItem() +"',"
+                    +"district='"     + cb_district.getSelectedItem() +"',"
+                    +"year='"     + cb_year.getSelectedItem() +
+                    "' WHERE "+"id='"     + et_nik.getText() +"'" 
+            );
+            fillData("");
+            JOptionPane.showMessageDialog(rootPane, "Update data berhasil", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            clearForm();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_btn_updateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -269,6 +355,9 @@ public class MainView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add;
+    private javax.swing.JButton btn_delete;
+    private javax.swing.JButton btn_reset;
+    private javax.swing.JButton btn_update;
     private javax.swing.JComboBox<String> cb_district;
     private javax.swing.JComboBox<String> cb_gender;
     private javax.swing.JComboBox<String> cb_year;
