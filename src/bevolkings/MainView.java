@@ -31,7 +31,7 @@ public class MainView extends javax.swing.JFrame {
     
     public void heading(){
         Object[] judul = {
-            "Nama", "Jenis Kelamin", "Distrik", "Tahun"
+           "NIK","Nama", "Jenis Kelamin", "Distrik", "Tahun"
         };
         tableModel = new DefaultTableModel(null, judul);
         tb_penduduk.setModel(tableModel);
@@ -46,6 +46,7 @@ public class MainView extends javax.swing.JFrame {
             
             while(resultSet.next()){
                 Object[] data = {
+                    resultSet.getString("id"),
                     resultSet.getString("name"),
                     resultSet.getString("gender"),
                     resultSet.getString("district"),
@@ -87,6 +88,8 @@ public class MainView extends javax.swing.JFrame {
         btn_add = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tb_penduduk = new javax.swing.JTable();
+        et_nik = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,6 +138,8 @@ public class MainView extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tb_penduduk);
 
+        jLabel7.setText("NIK");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -142,7 +147,6 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(121, 121, 121)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_add)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel1)
                         .addComponent(jLabel2)
@@ -154,12 +158,15 @@ public class MainView extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4)
                                 .addComponent(jLabel5)
-                                .addComponent(jLabel6))
+                                .addComponent(jLabel6)
+                                .addComponent(jLabel7))
                             .addGap(46, 46, 46)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(et_nik, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(cb_gender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cb_district, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cb_year, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(cb_year, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(btn_add))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(44, Short.MAX_VALUE))
@@ -190,6 +197,10 @@ public class MainView extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(cb_year, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(et_nik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addGap(5, 5, 5)
                         .addComponent(btn_add))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(176, Short.MAX_VALUE))
@@ -203,7 +214,18 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_et_nameActionPerformed
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
-       
+       if(et_nik.getText().isEmpty() || et_name.getText().isEmpty()|| cb_gender.getSelectedIndex() == 0 || cb_district.getSelectedIndex() == 0 || cb_year.getSelectedIndex() == 0){
+           JOptionPane.showMessageDialog(rootPane, "Ada data yang ksosong", "Gagal Input", JOptionPane.ERROR_MESSAGE);
+       }else {
+           try{
+               statement = connection.createStatement();
+               statement.executeUpdate("INSERT INTO data_penduduk VALUES('"+et_nik.getText()+"','"+et_name.getText()+"','"+cb_district.getSelectedItem()+"','"+cb_gender.getSelectedItem()+"','"+cb_year.getSelectedItem()+"')");
+               JOptionPane.showMessageDialog(rootPane, "Berhasil disimpan", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+               fillData("");
+           }catch(Exception e){
+               e.printStackTrace();
+           }
+       }
     }//GEN-LAST:event_btn_addActionPerformed
 
     /**
@@ -251,12 +273,14 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cb_gender;
     private javax.swing.JComboBox<String> cb_year;
     private javax.swing.JTextField et_name;
+    private javax.swing.JTextField et_nik;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tb_penduduk;
     // End of variables declaration//GEN-END:variables
