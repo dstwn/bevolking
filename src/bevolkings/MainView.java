@@ -14,6 +14,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 
 
 /**
@@ -69,6 +73,18 @@ public class MainView extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    public String getDataFilter(String data) throws SQLException{
+         try{
+            statement = connection.createStatement();
+            tableModel.getDataVector().removeAllElements();
+            tableModel.fireTableDataChanged();
+            resultSet = statement.executeQuery("SELECT COUNT(*) AS district FROM data_penduduk WHERE district='"+data+"'");
+            resultSet.next();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+          return resultSet.getString("district");
+    }
     
     public MainView() throws SQLException {
         initComponents();
@@ -105,6 +121,8 @@ public class MainView extends javax.swing.JFrame {
         btn_update = new javax.swing.JButton();
         btn_delete = new javax.swing.JButton();
         btn_reset = new javax.swing.JButton();
+        btn_pie = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -181,6 +199,20 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
+        btn_pie.setText("Statistik Penduduk ");
+        btn_pie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_pieActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -188,33 +220,39 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(121, 121, 121)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel2)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel7)
-                                .addComponent(jLabel3))
-                            .addGap(46, 46, 46)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(et_name)
-                                .addComponent(et_nik, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(cb_gender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cb_district, 0, 260, Short.MAX_VALUE)
-                                .addComponent(cb_year, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btn_update, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btn_reset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btn_delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btn_add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton1)
+                        .addGap(70, 70, 70)
+                        .addComponent(btn_pie))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel2)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel7)
+                                        .addComponent(jLabel3))
+                                    .addGap(46, 46, 46)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(et_name)
+                                        .addComponent(et_nik, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(cb_gender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cb_district, 0, 260, Short.MAX_VALUE)
+                                        .addComponent(cb_year, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(btn_update, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btn_reset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(15, 15, 15)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btn_delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btn_add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -255,7 +293,11 @@ public class MainView extends javax.swing.JFrame {
                             .addComponent(btn_delete)
                             .addComponent(btn_reset)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_pie)
+                    .addComponent(jButton1))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         pack();
@@ -336,6 +378,31 @@ public class MainView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_deleteActionPerformed
 
+    private void btn_pieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pieActionPerformed
+        // TODO add your handling code here:
+        DefaultPieDataset dataSet = new DefaultPieDataset();
+        try {
+            dataSet.setValue("Bantul", Integer.parseInt(getDataFilter("Bantul")));
+            dataSet.setValue("Sleman", Integer.parseInt(getDataFilter("Sleman")));
+            dataSet.setValue("Kulon Progo", Integer.parseInt(getDataFilter("Kulon Progo")));
+            dataSet.setValue("Gunung Kidul", Integer.parseInt(getDataFilter("Gunung Kidul")));
+            dataSet.setValue("Kota Yogya", Integer.parseInt(getDataFilter("Kota Yogya")));
+            JFreeChart chart = ChartFactory.createPieChart("Statistik Penduduk", dataSet);
+            ChartFrame cFrame = new ChartFrame("Data Statistik ", chart );
+            cFrame.setSize(400,400);
+            cFrame.setVisible(true);
+            fillData("");
+        } catch (SQLException ex) {
+            Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btn_pieActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -378,6 +445,7 @@ public class MainView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add;
     private javax.swing.JButton btn_delete;
+    private javax.swing.JButton btn_pie;
     private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_update;
     private javax.swing.JComboBox<String> cb_district;
@@ -385,6 +453,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cb_year;
     private javax.swing.JTextField et_name;
     private javax.swing.JTextField et_nik;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
